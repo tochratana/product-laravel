@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        $products = collect($this->demoProducts());
+
         return view('products.index', compact('products'));
     }
 
@@ -21,72 +20,88 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        // Validate the incoming data
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
             'price' => 'required|numeric|min:0|max:9999999.99',
             'stock' => 'required|integer|min:0|max:999999',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // 2MB max
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('products', 'public');
-            $validated['image'] = $imagePath;
-        }
-
-        Product::create($validated);
-
-        return redirect('/products')->with('success', 'Product created successfully!');
+        return redirect('/products')->with('success', 'Demo mode: product form validated without database storage.');
     }
 
-    public function show(Product $product)
+    public function show(string $product)
     {
-        return view('products.show', compact('product'));
+        return redirect('/products');
     }
 
-    public function edit(Product $product)
+    public function edit(string $product)
     {
+        $product = $this->findDemoProduct($product);
+
         return view('products.edit', compact('product'));
     }
 
-    public function update(Request $request, Product $product)
+    public function update(Request $request, string $product)
     {
-        // Validate the incoming data
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
             'price' => 'required|numeric|min:0|max:9999999.99',
             'stock' => 'required|integer|min:0|max:999999',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // 2MB max
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
         ]);
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            // Delete old image if exists
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
-            }
-            
-            $imagePath = $request->file('image')->store('products', 'public');
-            $validated['image'] = $imagePath;
-        }
-
-        $product->update($validated);
-
-        return redirect('/products')->with('success', 'Product updated successfully!');
+        return redirect('/products')->with('success', 'Demo mode: product update validated without database storage.');
     }
 
-    public function destroy(Product $product)
+    public function destroy(string $product)
     {
-        // Delete image if exists
-        if ($product->image) {
-            Storage::disk('public')->delete($product->image);
+        return redirect('/products')->with('success', 'Demo mode: product delete skipped because database storage is disabled.');
+    }
+
+    private function findDemoProduct(string $id): object
+    {
+        foreach ($this->demoProducts() as $product) {
+            if ((string) $product->id === $id) {
+                return $product;
+            }
         }
 
-        $product->delete();
+        abort(404);
+    }
 
-        return redirect('/products')->with('success', 'Product deleted successfully!');
+    /**
+     * Database-free product data for automated monolithic deploy demos.
+     */
+    private function demoProducts(): array
+    {
+        return [
+            (object) [
+                'id' => 1,
+                'name' => 'Wireless Keyboard',
+                'description' => 'Compact mechanical keyboard for fast product demos.',
+                'price' => 59.90,
+                'stock' => 24,
+                'image' => null,
+            ],
+            (object) [
+                'id' => 2,
+                'name' => 'USB-C Hub',
+                'description' => 'Seven-port hub with HDMI, card reader, and power delivery.',
+                'price' => 42.50,
+                'stock' => 8,
+                'image' => null,
+            ],
+            (object) [
+                'id' => 3,
+                'name' => 'Portable Monitor',
+                'description' => 'Lightweight second screen for remote work setups.',
+                'price' => 189.00,
+                'stock' => 13,
+                'image' => null,
+            ],
+        ];
     }
 }

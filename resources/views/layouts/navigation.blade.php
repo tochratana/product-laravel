@@ -18,41 +18,11 @@
                 </div>
             </div>
 
-            <!-- Settings Dropdown -->
+            <!-- Demo label -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-4 py-2 border border-cyan-500/30 text-sm leading-4 font-medium rounded-md text-cyan-400 bg-black/20 hover:bg-cyan-500/10 hover:border-cyan-400 focus:outline-none transition ease-in-out duration-150" style="font-family: 'Outfit', sans-serif;">
-                            <div>{{ Auth::user()->name }}</div>
-
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        <div class="bg-gray-900/95 backdrop-blur-md border border-cyan-500/20 rounded-md shadow-lg" style="box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);">
-                            <x-dropdown-link :href="route('profile.edit')" class="text-gray-300 hover:text-cyan-400 hover:bg-cyan-500/10">
-                                {{ __('Profile') }}
-                            </x-dropdown-link>
-
-                            <!-- Authentication -->
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-
-                                <x-dropdown-link :href="route('logout')"
-                                        onclick="event.preventDefault();
-                                                    this.closest('form').submit();"
-                                        class="text-gray-300 hover:text-red-400 hover:bg-red-500/10">
-                                    {{ __('Log Out') }}
-                                </x-dropdown-link>
-                            </form>
-                        </div>
-                    </x-slot>
-                </x-dropdown>
+                <span class="inline-flex items-center px-4 py-2 border border-cyan-500/30 text-sm leading-4 font-medium rounded-md text-cyan-400 bg-black/20" style="font-family: 'Outfit', sans-serif;">
+                    Demo Mode
+                </span>
             </div>
 
             <!-- Hamburger -->
@@ -75,29 +45,11 @@
             </x-responsive-nav-link>
         </div>
 
-        <!-- Responsive Settings Options -->
+        <!-- Responsive demo label -->
         <div class="pt-4 pb-1 border-t border-cyan-500/20">
             <div class="px-4">
-                <div class="font-medium text-base text-cyan-400" style="font-family: 'Outfit', sans-serif;">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-400">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')" class="text-gray-300 hover:text-cyan-400">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();"
-                            class="text-gray-300 hover:text-red-400">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
+                <div class="font-medium text-base text-cyan-400" style="font-family: 'Outfit', sans-serif;">Demo Mode</div>
+                <div class="font-medium text-sm text-gray-400">Database-free deployment</div>
             </div>
         </div>
     </div>
